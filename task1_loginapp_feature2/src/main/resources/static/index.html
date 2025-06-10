@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Signup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        form {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        label {
+            display: inline-block;
+            width: 120px;
+        }
+        input, select {
+            padding: 8px;
+            margin-bottom: 10px;
+            width: 250px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        #welcomeMessage {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 18px;
+        }
+    </style>
+    <script>
+        function toggleForm() {
+            var signupFields = document.getElementById("signupFields");
+            var submitButton = document.getElementById("submitBtn");
+            var isSignup = document.getElementById("isSignup").checked;
+
+            // Show/hide signup fields
+            signupFields.style.display = isSignup ? "block" : "none";
+            submitButton.innerText = isSignup ? "Sign Up" : "Login";
+
+            // Enable/disable required attributes dynamically
+            var additionalFields = signupFields.querySelectorAll("input, select");
+            additionalFields.forEach(field => {
+                if (isSignup) {
+                    field.setAttribute("required", "true");
+                } else {
+                    field.removeAttribute("required");
+                }
+            });
+        }
+
+        function submitForm(event) {
+            event.preventDefault();
+
+            var form = document.getElementById("authForm");
+            var isSignup = document.getElementById("isSignup").checked;
+            var messageDiv = document.getElementById("message");
+            var welcomeDiv = document.getElementById("welcomeMessage");
+            var authForm = document.getElementById("authForm");
+
+            // Get form data
+            var formData = {
+                email: form.email.value,
+                password: form.password.value,
+                isSignup: isSignup
+            };
+
+            if (isSignup) {
+                formData.firstName = form.firstName.value;
+                formData.lastName = form.lastName.value;
+                formData.mobile = form.mobile.value;
+                formData.gender = form.gender.value;
+                formData.location = form.location.value;
+            }
+
+            // Send AJAX request
+            fetch('/api/auth', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json()) // Always parse as JSON now
+            .then(data => {
+                if (data.success) {
+                    if (!isSignup) {
+                        // Show welcome message and hide form for successful login
+                        messageDiv.style.display = "none";
+                        welcomeDiv.textContent = data.message;
+                        welcomeDiv.style.display = "block";
+                        authForm.style.display = "none";
+                    } else {
+                        // For signup, just show the success message
+                        messageDiv.textContent = data.message;
+                        messageDiv.className = "message success";
+                    }
+                } else {
+                    // Show error message
+                    messageDiv.textContent = data.message;
+                    messageDiv.className = "message error";
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                messageDiv.textContent = "An error occurred while processing your request. Please try again.";
+                messageDiv.className = "message error";
+            });
+        }
+    </script>
+</head>
+<body>
+    <h2>User Authentication</h2>
+
+    <form id="authForm" onsubmit="submitForm(event)">
+        <div>
+            <label>Email:</label>
+            <input type="email" name="email" required>
+        </div>
+
+        <div>
+            <label>Password:</label>
+            <input type="password" name="password" required>
+        </div>
+
+        <div>
+            <input type="checkbox" id="isSignup" name="isSignup" onchange="toggleForm()">
+            <label for="isSignup" style="width: auto;">Sign Up</label>
+        </div>
+
+        <div id="signupFields" style="display: none;">
+            <div>
+                <label>First Name:</label>
+                <input type="text" name="firstName">
+            </div>
+
+            <div>
+                <label>Last Name:</label>
+                <input type="text" name="lastName">
+            </div>
+
+            <div>
+                <label>Mobile Number:</label>
+                <input type="text" name="mobile">
+            </div>
+
+            <div>
+                <label>Gender:</label>
+                <select name="gender">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Location:</label>
+                <input type="text" name="location">
+            </div>
+        </div>
+
+        <button type="submit" id="submitBtn">Login</button>
+    </form>
+
+    <div id="message"></div>
+    <div id="welcomeMessage"></div>
+</body>
+</html>
