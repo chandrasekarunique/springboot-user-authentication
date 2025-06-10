@@ -1,4 +1,4 @@
-# springboot-user-authentication - Spring Boot Login & Signup Application
+# Spring Boot Login & Signup Application
 
 This is a backend Spring Boot application that implements **User Signup and Login functionalities** with secure API endpoints. It uses **MySQL** as the database and **Spring Security**, **Spring Data JPA**, and **REST APIs** for authentication and data persistence.
 
