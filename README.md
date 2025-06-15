@@ -6,13 +6,13 @@ This is a backend Spring Boot application that implements **User Signup and Logi
 
 ## Features
 
-- ✅ Signup with full user details (email, password, name, mobile, gender, location, DOB)
-- ✅ Login with existing credentials
-- ✅ REST API support for both operations
-- ✅ MySQL integration for data storage
-- ✅ CORS configuration for frontend integration
-- ✅ Spring Security for basic endpoint protection
-- ✅ DTO-friendly and API-structured response format
+- Signup with full user details (email, password, name, mobile, gender, location, DOB)
+- Login with existing credentials
+- REST API support for both operations
+- MySQL integration for data storage
+- CORS configuration for frontend integration
+- Spring Security for basic endpoint protection
+- DTO-friendly and API-structured response format
 
 ---
 
@@ -29,7 +29,7 @@ This is a backend Spring Boot application that implements **User Signup and Logi
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```text
 src/main/java/
